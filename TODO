@@ -1,3 +1,8 @@
 
 Log de Actividades
--[] Usar Polars para limpiar datos. En otra Function
+-[X] Usar Polars para limpiar datos. En otra Function
+-[] Crear un predict con una funcion
+--[] Tomar la info de la API pero considerar que necesita una semana de datos
+--[] Generar la sequencia y el seq2seq implementation
+-[] Subir a la nube la prediccion y generar el dato para ir graficando los datos
+

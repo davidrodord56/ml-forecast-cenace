@@ -1,5 +1,5 @@
 import requests
-import numpy
+import polars as pl
 
 def collect_data_api(system="NAC", start_epoch= 1664299202, end_epoch= 1664385602):
     #Consider this only works for demandaNAC others may vary and require further implementation
@@ -19,9 +19,11 @@ def collect_data_api(system="NAC", start_epoch= 1664299202, end_epoch= 166438560
         except:
             return None
 
-    print(data)
+    return data
 
+def aggregate_data(data):
+    collected_data = pl.DataFrame(data,schema=['timestamp','demand','cforecast'])
+    collected_data = collected_data.with_columns(pl.from_epoch(pl.col('timestamp'), time_unit='s').cast(pl.Datetime).dt.replace_time_zone("UTC").dt.convert_time_zone(time_zone="America/Mexico_City").alias('datetime'))
+    aggregated_data = collected_data.sort('datetime').group_by_dynamic("datetime", every="1h").agg(pl.all().exclude('datetime').mean()).drop('timestamp')
 
-
-
-collect_data_api()
+    return aggregated_data
