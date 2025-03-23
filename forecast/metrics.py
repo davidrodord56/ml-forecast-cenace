@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
 from scipy.stats import pearsonr
+from scipy.spatial import distance
 
 def calculate_rmse(y_true, y_pred):
     """
@@ -43,5 +44,8 @@ def calculate_correlation(y_true, y_pred):
     - float, correlation coefficient.
     """
     return pearsonr(y_true, y_pred)[0]
+
+def calculate_dcorr(y_true, y_pred):
+    return distance.correlation(y_true, y_pred)
 
 

@@ -10,14 +10,14 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import hvplot
-from metrics import calculate_correlation, calculate_mape,calculate_rmse
+from metrics import calculate_correlation, calculate_mape,calculate_rmse, calculate_dcorr
 
 
 
 
 def data_prepare_last_week():
     print("This is predictor")
-    start_epoch = int(time.time()) - 48*24*60*60 + 1 #Regresar a 24
+    start_epoch = int(time.time()) - 10*24*60*60 + 1 #Regresar a 24
     end_epoch = start_epoch + 8*24*60*60
 
     data = collect_data_api(system="NAC", start_epoch= start_epoch, end_epoch= end_epoch)
@@ -64,7 +64,9 @@ def data_prepare_last_week():
     final_pd['datetime'] = pd.to_datetime(final_pd['datetime'])
     final_pd = final_pd.set_index('datetime')
     print(final_pd)
-    final_pd.plot(ylim=(0,52000))
+
+    final_pd.plot(ylim=(20000,52000),ylabel =('Demand (MW)'), title = ('Plot of prediction and actual values'))
+
 
     plt.show()
 
@@ -73,7 +75,8 @@ def data_prepare_last_week():
 
     rmse = calculate_rmse(true_values, predicted_values)
     mape = calculate_mape(true_values, predicted_values)
-    correlation = calculate_correlation(true_values, predicted_values)
+
+    correlation = calculate_dcorr(true_values, predicted_values)
 
     print(f"RMSE: {round(rmse, 7)}")
     print(f"MAPE: {round(mape, 7)}%")
